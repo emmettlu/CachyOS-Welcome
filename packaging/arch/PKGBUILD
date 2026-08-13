@@ -1,0 +1,62 @@
+pkgname=agentos-hello
+pkgver=0.28.1
+pkgrel=1
+pkgdesc='Welcome screen for AgentOS'
+arch=('x86_64')
+url='https://github.com/emmettlu/CachyOS-Welcome'
+license=('GPL-3.0-or-later')
+depends=(
+  'glib2'
+  'gtk3'
+  'libusb'
+  'libusb-1.0.so=0-64'
+  'pciutils'
+  'procps-ng'
+)
+makedepends=(
+  'cargo'
+  'clang'
+  'git'
+  'lld'
+  'llvm'
+)
+provides=("cachyos-hello=${pkgver}")
+conflicts=('cachyos-hello')
+replaces=('cachyos-hello')
+options=('!lto')
+source=("agentos-hello-${pkgver}.tar.zst")
+sha256sums=('SKIP')
+
+build() {
+  local cargo_target_dir="${srcdir}/.cargo-target"
+
+  cd "agentos-hello-${pkgver}"
+  CARGO_TARGET_DIR="${cargo_target_dir}" cargo build --locked --release
+}
+
+check() {
+  local cargo_target_dir="${srcdir}/.cargo-target"
+
+  cd "agentos-hello-${pkgver}"
+  CARGO_TARGET_DIR="${cargo_target_dir}" cargo test --locked
+}
+
+package() {
+  local source_root="${srcdir}/agentos-hello-${pkgver}"
+  local cargo_target_dir="${srcdir}/.cargo-target"
+
+  install -Dm755 "${cargo_target_dir}/release/agentos-hello" \
+    "${pkgdir}/usr/bin/agentos-hello"
+  install -Dm644 "${source_root}/agentos-hello.desktop" \
+    "${pkgdir}/usr/share/applications/agentos-hello.desktop"
+  install -Dm644 "${source_root}/agentos-hello.desktop" \
+    "${pkgdir}/etc/skel/.config/autostart/agentos-hello.desktop"
+  install -Dm644 "${source_root}/data/img/agentos-logo.png" \
+    "${pkgdir}/usr/share/icons/hicolor/512x512/apps/org.agentos.hello.png"
+  install -Dm755 "${source_root}/src/scripts/rootshell.sh" \
+    "${pkgdir}/usr/share/agentos-hello/scripts/rootshell.sh"
+  install -Dm755 "${source_root}/src/scripts/terminal-helper" \
+    "${pkgdir}/usr/share/agentos-hello/scripts/terminal-helper"
+  install -Dm644 "${source_root}/LICENSE" \
+    "${pkgdir}/usr/share/licenses/agentos-hello/LICENSE"
+}

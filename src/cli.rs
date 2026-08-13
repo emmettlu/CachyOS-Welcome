@@ -48,7 +48,7 @@ pub enum Commands {
     Tweak(TweakArgs),
     /// Configure DNS settings for network connections
     Dns(DnsArgs),
-    /// Launch associated `CachyOS` applications
+    /// Launch associated AgentOS applications
     Launch(LaunchArgs),
 }
 
@@ -74,7 +74,7 @@ pub enum FixAction {
     RemoveOrphans,
     /// Rank mirrors to find up2date&fastest ones
     RankMirrors,
-    /// Install `CachyOS` gaming meta-packages
+    /// Install AgentOS gaming meta-packages
     InstallGaming,
     /// Show the `KWin` Wayland debug console (if running)
     ShowKwinDebug,
@@ -122,9 +122,9 @@ pub struct LaunchArgs {
 
 #[derive(Subcommand, Debug)]
 pub enum AppToLaunch {
-    /// Launch the `CachyOS` Package Installer
+    /// Launch the AgentOS Package Installer
     PackageInstaller,
-    /// Launch the `CachyOS` Kernel Manager
+    /// Launch the AgentOS Kernel Manager
     KernelManager,
 }
 

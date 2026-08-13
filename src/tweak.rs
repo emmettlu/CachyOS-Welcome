@@ -14,7 +14,7 @@ pub enum TweakName {
     Bluetooth,
     /// Ananicy Cpp service
     Ananicy,
-    /// `CachyOS` update notifier
+    /// System update notifier
     #[clap(name = "cachy-update")]
     CachyUpdate,
 }

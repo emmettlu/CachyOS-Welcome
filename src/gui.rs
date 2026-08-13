@@ -41,11 +41,11 @@ pub fn run_command(command: &str, escalate: bool) -> bool {
     let cmd_formated = format!("{command}; read -p 'Press enter to exit'");
     let mut args: Vec<&str> = vec![];
     if escalate {
-        args.extend_from_slice(&["-s", "pkexec /usr/share/cachyos-hello/scripts/rootshell.sh"]);
+        args.extend_from_slice(&["-s", "pkexec /usr/share/agentos-hello/scripts/rootshell.sh"]);
     }
     args.push(cmd_formated.as_str());
 
-    let exit_status = subprocess::Exec::cmd("/usr/share/cachyos-hello/scripts/terminal-helper")
+    let exit_status = subprocess::Exec::cmd("/usr/share/agentos-hello/scripts/terminal-helper")
         .args(args.as_slice())
         .stdout(subprocess::Redirection::Pipe)
         .join()

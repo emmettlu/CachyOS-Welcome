@@ -1,21 +1,20 @@
 {
     "default_locale": "en",
-    "autostart_path": "~/.config/autostart/cachyos-hello.desktop",
-    "data_path": "/usr/share/cachyos-hello/data/",
-    "desktop_path": "/usr/share/applications/cachyos-hello.desktop",
+    "autostart_path": "~/.config/autostart/agentos-hello.desktop",
+    "data_path": "/usr/share/agentos-hello/data/",
+    "desktop_path": "/usr/share/applications/agentos-hello.desktop",
     "installer_path": "/usr/bin/calamares",
     "live_path": "/run/archiso",
-    "logo_path": "/usr/share/icons/hicolor/scalable/apps/",
-    "save_path": "~/.config/cachyos-hello.json",
+    "save_path": "~/.config/agentos-hello.json",
     "urls": {
-        "development": "https://github.com/cachyos",
-        "software": "https://packages.cachyos.org",
-        "donate": "https://www.patreon.com/CachyOS",
-        "forum": "https://discuss.cachyos.org",
-        "discord": "https://discord.gg/cachyos-862292009423470592",
-        "reddit": "https://www.reddit.com/r/cachyos",
-        "twitter": "https://twitter.com/cachyos",
-        "wiki": "https://wiki.cachyos.org",
-        "release": "https://blog.cachyos.org"
+        "development": "https://github.com/emmettlu/agentos",
+        "software": "https://github.com/emmettlu/agentos/releases",
+        "donate": "https://github.com/emmettlu/agentos",
+        "forum": "https://github.com/emmettlu/agentos/issues",
+        "discord": "https://github.com/emmettlu/agentos",
+        "reddit": "https://github.com/emmettlu/agentos",
+        "twitter": "https://github.com/emmettlu/agentos",
+        "wiki": "https://github.com/emmettlu/agentos/blob/main/README.md",
+        "release": "https://github.com/emmettlu/agentos/releases"
     }
 }

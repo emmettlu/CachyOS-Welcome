@@ -1,5 +1,5 @@
-project('cachyos-hello', 'rust',
-        version: '0.26.0',
+project('agentos-hello', 'rust',
+        version: '0.28.1',
         license: 'GPLv3',
         meson_version: '>=0.56.0',
         default_options: ['buildtype=debugoptimized',
@@ -10,7 +10,7 @@ project('cachyos-hello', 'rust',
 i18n = import('i18n')
 gnome = import('gnome')
 
-base_id = 'org.cachyos.hello'
+base_id = 'org.agentos.hello'
 
 dependency('glib-2.0', version: '>= 2.66')
 dependency('gio-2.0', version: '>= 2.66')

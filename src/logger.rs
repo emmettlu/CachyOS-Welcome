@@ -22,8 +22,8 @@ pub fn setup_logger() -> WorkerGuard {
 
     // create just a file appender, without rolling
     let file_appender = tracing_appender::rolling::never(
-        utils::fix_path("~/.config/cachyos/cachyos-hello"),
-        "cachyos-hello.log",
+        utils::fix_path("~/.config/agentos/agentos-hello"),
+        "agentos-hello.log",
     );
 
     let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);

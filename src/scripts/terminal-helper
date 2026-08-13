@@ -95,7 +95,7 @@ if [ -z "$terminal" ] || ! command -v "$terminal" &>/dev/null; then
 fi
 
 if [ -z "$terminal" ]; then
-    notify-send -t 1500 --app-name=CachyOS "No terminal installed" "Could not find a terminal emulator. Please install one."
+    notify-send -t 1500 --app-name=AgentOS "No terminal installed" "Could not find a terminal emulator. Please install one."
     exit 1
 fi
 

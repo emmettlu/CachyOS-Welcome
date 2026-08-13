@@ -5,25 +5,12 @@ use crate::{G_HELLO_WINDOW, check_regular_file, fl};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
-use std::time::Duration;
 
 use gtk::glib;
 use gtk::prelude::{BuilderExtManual, WidgetExt};
 
-use serde::Deserialize;
 use subprocess::{Exec, Redirection};
 use tracing::{error, info};
-
-/// HTTP checks must not block forever.
-const HTTP_TIMEOUT: Duration = Duration::from_secs(10);
-
-#[derive(Deserialize)]
-struct Versions {
-    #[serde(rename = "desktopISOVersion")]
-    desktop_iso_version: String,
-    #[serde(rename = "handheldISOVersion")]
-    handheld_iso_version: String,
-}
 
 enum CheckOutcome {
     /// Passed silently
@@ -40,14 +27,7 @@ enum InstallerMsg {
     Finished,
 }
 
-/// Blocking HTTP GET with a bounded timeout.
-fn http_get(url: &str) -> reqwest::Result<reqwest::blocking::Response> {
-    reqwest::blocking::Client::builder().timeout(HTTP_TIMEOUT).build()?.get(url).send()
-}
-
-fn outdated_version_check() -> CheckOutcome {
-    let edition_tag: String =
-        fs::read_to_string("/etc/edition-tag").unwrap_or("desktop".into()).trim().into();
+fn installation_media_check() -> CheckOutcome {
     let version_tag: String =
         fs::read_to_string("/etc/version-tag").unwrap_or("testing".into()).trim().into();
 
@@ -55,39 +35,6 @@ fn outdated_version_check() -> CheckOutcome {
         return CheckOutcome::Warn(fl!("testing-iso-warning"));
     }
 
-    let response = http_get("https://cachyos.org/versions.json");
-    if response.is_err() {
-        return CheckOutcome::Fail(MessageType::Warning, fl!("offline-error"));
-    }
-
-    // silently continue in case of server error
-    let versions = response.map(|x| x.json::<Versions>().unwrap());
-    if let Err(vers_err) = versions {
-        error!("Failed to fetch versions.json: {vers_err}");
-        return CheckOutcome::Pass;
-    }
-
-    let latest_version = if edition_tag.contains("desktop") {
-        versions.unwrap().desktop_iso_version
-    } else {
-        versions.unwrap().handheld_iso_version
-    }
-    .trim()
-    .to_owned();
-
-    // in most cases it should be just date number (YYMMDD)
-    let parsed_ver = version_tag.parse::<u32>();
-    let parsed_latestver = latest_version.parse::<u32>();
-    if parsed_ver.is_ok()
-        && parsed_latestver.is_ok()
-        && parsed_ver.unwrap() > parsed_latestver.unwrap()
-    {
-        return CheckOutcome::Warn(fl!("testing-iso-warning"));
-    }
-
-    if version_tag != latest_version {
-        return CheckOutcome::Warn(fl!("outdated-version-warning"));
-    }
     CheckOutcome::Pass
 }
 
@@ -112,41 +59,8 @@ fn edition_compat_check() -> CheckOutcome {
     CheckOutcome::Pass
 }
 
-fn connectivity_check() -> CheckOutcome {
-    // First try HTTP check to cachyos.org
-    let http_status = match http_get("https://cachyos.org") {
-        Ok(resp) => resp.status().is_success() || resp.status().is_server_error(),
-        _ => false,
-    };
-
-    if http_status {
-        return CheckOutcome::Pass;
-    }
-
-    // If HTTP check fails, try ping fallback to reliable DNS servers
-    let targets = [
-        "8.8.8.8",
-        "1.1.1.1",
-        "9.9.9.9",
-        "2001:4860:4860::8888",
-        "2606:4700:4700::1111",
-        "2620:fe::fe",
-    ];
-    for target in targets {
-        let ping_result = Exec::cmd("/sbin/ping").args(["-c", "1", "-W", "3", target]).join();
-        if ping_result.is_ok_and(|status: subprocess::ExitStatus| status.success()) {
-            info!("Connectivity confirmed via ping to {target}");
-            return CheckOutcome::Pass;
-        }
-    }
-
-    // All connectivity checks failed
-    CheckOutcome::Fail(MessageType::Error, fl!("offline-error"))
-}
-
 fn run_checks(tx: &async_channel::Sender<InstallerMsg>) {
-    let checks: [fn() -> CheckOutcome; 3] =
-        [connectivity_check, edition_compat_check, outdated_version_check];
+    let checks: [fn() -> CheckOutcome; 2] = [edition_compat_check, installation_media_check];
 
     for check in checks {
         match check() {

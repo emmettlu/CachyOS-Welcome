@@ -42,7 +42,7 @@ pub fn handle_fix_command(action: FixAction) -> Result<()> {
             actions::rankmirrors(crate::cli::run_command);
         },
         FixAction::InstallGaming => {
-            println!("{}", "Installing CachyOS gaming packages...".bold());
+            println!("{}", "Installing AgentOS gaming packages...".bold());
             actions::install_gaming(crate::cli::run_command, tx);
         },
         FixAction::ShowKwinDebug => {
@@ -332,8 +332,8 @@ pub fn handle_dns_command(action: DnsAction) -> Result<()> {
 
 pub fn handle_launch_command(app: AppToLaunch) -> Result<()> {
     let (app_name, bin_name) = match app {
-        AppToLaunch::PackageInstaller => ("CachyOS Package Installer", "cachyos-pi"),
-        AppToLaunch::KernelManager => ("CachyOS Kernel Manager", "cachyos-kernel-manager"),
+        AppToLaunch::PackageInstaller => ("AgentOS Package Installer", "cachyos-pi"),
+        AppToLaunch::KernelManager => ("AgentOS Kernel Manager", "cachyos-kernel-manager"),
     };
 
     println!("Launching {}...", app_name.bold());

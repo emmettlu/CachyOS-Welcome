@@ -39,7 +39,7 @@ use serde_json::json;
 use tracing::{debug, error};
 use unic_langid::LanguageIdentifier;
 
-const RESPREFIX: &str = "/org/cachyos/hello";
+const RESPREFIX: &str = "/org/agentos/hello";
 
 static G_SAVE_JSON: LazyLock<Mutex<serde_json::Value>> = LazyLock::new(|| {
     let preferences = get_preferences();
@@ -106,8 +106,8 @@ fn main() {
         gresource::init().expect("Could not load gresource file.");
 
         // Set program name.
-        glib::set_program_name("org.cachyos.hello".into());
-        glib::set_application_name("org.cachyos.hello");
+        glib::set_program_name(APP_ID.into());
+        glib::set_application_name(APP_ID);
 
         let application = gtk::Application::new(
             Some(APP_ID),       // Application id

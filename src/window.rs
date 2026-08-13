@@ -1,4 +1,4 @@
-use crate::config::{APP_ID, VERSION};
+use crate::config::VERSION;
 use crate::{RESPREFIX, check_regular_file, installer, pages, utils};
 
 use std::cell::RefCell;
@@ -52,7 +52,7 @@ impl HelloWindow {
         );
 
         // Init window
-        let builder = Builder::from_resource(&format!("{RESPREFIX}/ui/cachyos-hello.glade"));
+        let builder = Builder::from_resource(&format!("{RESPREFIX}/ui/agentos-hello.glade"));
 
         let main_window: Window =
             builder.object("window").expect("Could not get the object window");
@@ -60,14 +60,18 @@ impl HelloWindow {
 
         // Subtitle of headerbar
         let header: HeaderBar = builder.object("headerbar").expect("Could not get the headerbar");
-        header.set_subtitle(Some("CachyOS rolling"));
+        header.set_subtitle(Some("AgentOS rolling"));
 
-        // Load images
-        let logo_path = format!("{}/{APP_ID}.svg", preferences["logo_path"].as_str().unwrap());
-        if Path::new(&logo_path).exists() {
-            let logo = Pixbuf::from_file(logo_path).unwrap();
-            main_window.set_icon(Some(&logo));
-        }
+        // Load the embedded AgentOS brand mark for the window and welcome page.
+        let logo = Pixbuf::from_resource(&format!("{RESPREFIX}/data/img/agentos-logo.png"))
+            .expect("Could not load AgentOS logo");
+        main_window.set_icon(Some(&logo));
+        let display_logo = logo
+            .scale_simple(128, 128, gtk::gdk_pixbuf::InterpType::Bilinear)
+            .expect("Could not scale AgentOS logo");
+        let distrib_logo: gtk::Image =
+            builder.object("distriblogo").expect("Could not get distribution logo");
+        distrib_logo.set_from_pixbuf(Some(&display_logo));
 
         let social_box: gtk::Box = builder.object("social").unwrap();
         for btn in social_box.children() {
@@ -249,8 +253,8 @@ impl HelloWindow {
     }
 
     pub fn show_about_dialog(&self) {
-        let logo_path = format!("/usr/share/icons/hicolor/scalable/apps/{APP_ID}.svg");
-        let logo = Pixbuf::from_file(logo_path).unwrap();
+        let logo = Pixbuf::from_resource(&format!("{RESPREFIX}/data/img/agentos-logo.png"))
+            .expect("Could not load AgentOS logo");
 
         let dialog = gtk::AboutDialog::builder()
         .transient_for(&self.window)
@@ -264,9 +268,9 @@ impl HelloWindow {
         ])
         // Translators: Replace "translator-credits" with your names. Put a comma between.
         .translator_credits("translator-credits")
-        .copyright("2021-2026 CachyOS team")
+        .copyright("2021-2026 upstream contributors; 2026 AgentOS contributors")
         .license_type(gtk::License::Gpl30)
-        .website("https://github.com/cachyos/cachyos-welcome")
+        .website("https://github.com/emmettlu/agentos")
         .website_label("GitHub")
         .build();
 
@@ -285,24 +289,27 @@ impl HelloWindow {
 
         // Run-time locale changing
         let elts: HashMap<&str, Vec<_>> = HashMap::from([
-            ("label", vec![
-                "autostartlabel",
-                "development",
-                "software",
-                "donate",
-                "firstcategory",
-                "forum",
-                "install",
-                "installlabel",
-                "involved",
-                "readme",
-                "release",
-                "secondcategory",
-                "thirdcategory",
-                "welcomelabel",
-                "welcometitle",
-                "wiki",
-            ]),
+            (
+                "label",
+                vec![
+                    "autostartlabel",
+                    "development",
+                    "software",
+                    "donate",
+                    "firstcategory",
+                    "forum",
+                    "install",
+                    "installlabel",
+                    "involved",
+                    "readme",
+                    "release",
+                    "secondcategory",
+                    "thirdcategory",
+                    "welcomelabel",
+                    "welcometitle",
+                    "wiki",
+                ],
+            ),
             ("tooltip_text", vec!["about", "development", "software", "donate", "forum", "wiki"]),
         ]);
 

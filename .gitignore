@@ -36,3 +36,10 @@ data/pages/en/release
 *.exe
 *.out
 *.app
+
+# Arch package build artifacts
+/packaging/arch/.cargo-target*/
+/packaging/arch/pkg/
+/packaging/arch/src/
+/packaging/arch/*.pkg.tar.*
+/packaging/arch/agentos-hello-*.tar.*

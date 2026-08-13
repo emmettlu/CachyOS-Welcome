@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/agentos/hello">
+    <file compressed="true" preprocess="xml-stripblanks">ui/agentos-hello.glade</file>
+    <file compressed="true">ui/style.css</file>
+    <file compressed="true">data/img/agentos-logo.png</file>
+    <file compressed="true">data/img/external-link-symbolic.svg</file>
+    <file compressed="true">data/img/discord.svg</file>
+    <file compressed="true">data/img/reddit.svg</file>
+  </gresource>
+</gresources>
